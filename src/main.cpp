@@ -1,7 +1,10 @@
 #include <iostream>
 #include "ReplayMemory.h"
+#include "DQN.h"
 
 int main() {
+  DQN policyNetwork = DQN(1, 2);
+  DQN targetNetwork = DQN(1, 2);
   ReplayMemory memory(8);
   
   memory.push(1);
