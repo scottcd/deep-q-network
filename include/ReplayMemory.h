@@ -3,23 +3,30 @@
 
 #include <string>
 #include <ostream>
+#include <deque>
+#include <random>
+#include <algorithm>
 #include <torch/torch.h>
+
+using namespace std;
+
 
 class ReplayMemory {
 public:
-    ReplayMemory(const std::string& name, int age);
-    std::string getName() const;
-    int getAge() const;
-    torch::Tensor getTensor() const;
+    ReplayMemory(int capacity);
+    int getCapacity() const;
+    void push(int value);
+    std::vector<int> sample(int batchSize);
+    int size() const;
 
     friend std::ostream& operator<<(std::ostream& os, const ReplayMemory& replayMemory) {
-        os << "ReplayMemory(Name=" << replayMemory.mName << ", Age=" << replayMemory.mAge << ")";
+        os << "ReplayMemory(Capacity=" << replayMemory.capacity << ")";
         return os;
     }
 
 private:
-    std::string mName;
-    int mAge;
+    std::deque<int> memory;
+    int capacity;
 };
 
 #endif // REPLAYMEMORY_H

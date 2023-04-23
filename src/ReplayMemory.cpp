@@ -1,17 +1,32 @@
 #include "ReplayMemory.h"
+#include <random>
+#include <ranges>
+#include <algorithm>
 
 
-ReplayMemory::ReplayMemory(const std::string& name, int age) : mName(name), mAge(age) {}
+ReplayMemory::ReplayMemory(int capacity) : capacity(capacity) {}
 
-std::string ReplayMemory::getName() const {
-    return mName;
+void ReplayMemory::push(int value) {
+    memory.emplace_back(value);
+    if (memory.size() > capacity) {
+        memory.pop_front();
+    }
 }
 
-int ReplayMemory::getAge() const {
-    return mAge;
+std::vector<int> ReplayMemory::sample(int batchSize) {
+    // Create a vector to hold the sampled integers
+    std::vector<int> sampled_nums(batchSize);
+
+    // Use std::sample to sample 5 integers from nums
+    std::sample(memory.begin(), memory.end(), sampled_nums.begin(), batchSize, std::mt19937{std::random_device{}()});
+
+    return sampled_nums;
 }
 
-torch::Tensor ReplayMemory::getTensor() const {
-    torch::Tensor tensor = torch::rand({2, 3});
-    return tensor;
+int ReplayMemory::getCapacity() const {
+    return capacity;
+}
+
+int ReplayMemory::size() const {
+    return memory.size();
 }

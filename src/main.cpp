@@ -2,7 +2,13 @@
 #include "ReplayMemory.h"
 
 int main() {
-  ReplayMemory person("Chandler Scott", 27);
-
-  std::cout << person.getTensor() << std::endl;
+  ReplayMemory memory(8);
+  
+  memory.push(1);
+  memory.push(2);
+  memory.push(3);
+  memory.push(4);
+  memory.push(5);
+  
+  std::cout << memory.sample(1) << std::endl;
 }
