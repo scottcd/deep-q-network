@@ -1,7 +1,7 @@
 #include "Environment.h"
 #include "TicTacToeEnvironment.h"
 
-TicTacToeEnvironment::TicTacToeEnvironment() : Environment(9, 9),  board(9, 0)
+TicTacToeEnvironment::TicTacToeEnvironment() : Environment(9, 9),  board(9)
 {
 }
 

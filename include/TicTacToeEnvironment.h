@@ -16,7 +16,7 @@ public:
     virtual void close() override;
 
 private:
-    std::array<char, 9> board; // TicTacToe board
+    std::vector<double> board; // TicTacToe board
 };
 
 #endif // TICTACTOE_ENVIRONMENT_H

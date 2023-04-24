@@ -154,6 +154,30 @@ DQN.cpp.s:
 	cd /home/chandler/src/deep-q-network/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/mylibrary.dir/build.make src/CMakeFiles/mylibrary.dir/DQN.cpp.s
 .PHONY : DQN.cpp.s
 
+Environment.o: Environment.cpp.o
+.PHONY : Environment.o
+
+# target to build an object file
+Environment.cpp.o:
+	cd /home/chandler/src/deep-q-network/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/mylibrary.dir/build.make src/CMakeFiles/mylibrary.dir/Environment.cpp.o
+.PHONY : Environment.cpp.o
+
+Environment.i: Environment.cpp.i
+.PHONY : Environment.i
+
+# target to preprocess a source file
+Environment.cpp.i:
+	cd /home/chandler/src/deep-q-network/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/mylibrary.dir/build.make src/CMakeFiles/mylibrary.dir/Environment.cpp.i
+.PHONY : Environment.cpp.i
+
+Environment.s: Environment.cpp.s
+.PHONY : Environment.s
+
+# target to generate assembly for a file
+Environment.cpp.s:
+	cd /home/chandler/src/deep-q-network/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/mylibrary.dir/build.make src/CMakeFiles/mylibrary.dir/Environment.cpp.s
+.PHONY : Environment.cpp.s
+
 ReplayMemory.o: ReplayMemory.cpp.o
 .PHONY : ReplayMemory.o
 
@@ -238,6 +262,9 @@ help:
 	@echo "... DQN.o"
 	@echo "... DQN.i"
 	@echo "... DQN.s"
+	@echo "... Environment.o"
+	@echo "... Environment.i"
+	@echo "... Environment.s"
 	@echo "... ReplayMemory.o"
 	@echo "... ReplayMemory.i"
 	@echo "... ReplayMemory.s"

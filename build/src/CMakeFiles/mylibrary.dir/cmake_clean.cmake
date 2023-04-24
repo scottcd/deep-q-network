@@ -1,6 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/mylibrary.dir/DQN.cpp.o"
   "CMakeFiles/mylibrary.dir/DQN.cpp.o.d"
+  "CMakeFiles/mylibrary.dir/Environment.cpp.o"
+  "CMakeFiles/mylibrary.dir/Environment.cpp.o.d"
   "CMakeFiles/mylibrary.dir/ReplayMemory.cpp.o"
   "CMakeFiles/mylibrary.dir/ReplayMemory.cpp.o.d"
   "CMakeFiles/mylibrary.dir/TicTacToeEnvironment.cpp.o"

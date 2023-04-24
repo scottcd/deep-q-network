@@ -8,10 +8,8 @@
 
 class Environment {
 public:
-    Environment(int numObservations, int numActions)
-    : observationSpace(numObservations), actionSpace(numActions)
-    {}
-    virtual ~Environment() {};
+    Environment(int numObservations, int numActions);
+    virtual ~Environment();
     virtual std::tuple<std::vector<double>, float, bool> step(int action); 
     virtual std::vector<double> reset();
     virtual void render();
