@@ -1,12 +1,13 @@
 # Get a list of all source files in the directory
 file(GLOB SOURCES *.cpp)
 
+include_directories(${CMAKE_SOURCE_DIR}/../includes)
+
 # Add the source files
 add_library(mylibrary
   ${SOURCES}
   )
 
-include_directories(include)
 
 # Link against any required libraries
 target_link_libraries(mylibrary PRIVATE

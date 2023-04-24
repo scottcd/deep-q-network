@@ -14,7 +14,6 @@ using namespace torch;
 class DQN  : public torch::nn::Module{
 public:
     DQN(int numObservations, int numActions);
-    int getCapacity() const;
     torch::Tensor& forward(torch::Tensor& x);
 
     friend std::ostream& operator<<(std::ostream& os, const DQN& dqn) {
