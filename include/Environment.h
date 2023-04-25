@@ -5,18 +5,21 @@
 #include <ostream>
 #include <vector>
 #include <tuple>
+#include <torch/torch.h>
 
-class Environment {
+class Environment
+{
 public:
-    Environment(int numObservations, int numActions);
-    virtual ~Environment();
-    virtual std::tuple<std::vector<double>, float, bool> step(int action); 
-    virtual std::vector<double> reset();
-    virtual void render();
-    virtual void close();
+    Environment(int numObservations, int numActions) : observationSpace(numObservations), actionSpace(numActions)
+    {
+    }
+    virtual std::tuple<torch::Tensor, torch::Tensor, bool> step(int action) = 0;
+    virtual torch::Tensor reset() = 0;
+    virtual void render() = 0;
+    virtual void close() = 0;
+    int getNumActions() { return actionSpace.size(); }
 
-
-private:
+protected:
     // structure for each possible action
     std::vector<int> actionSpace;
     // structure for current state of the environment

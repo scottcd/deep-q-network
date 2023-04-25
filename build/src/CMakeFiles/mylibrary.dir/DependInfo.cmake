@@ -1,18 +1,32 @@
-
-# Consider dependencies only in project.
-set(CMAKE_DEPENDS_IN_PROJECT_ONLY OFF)
-
 # The set of languages for which implicit dependencies are needed:
 set(CMAKE_DEPENDS_LANGUAGES
+  "CXX"
+  )
+# The set of files for implicit dependencies of each language:
+set(CMAKE_DEPENDS_CHECK_CXX
+  "/mnt/c/Users/Owner/source/repos/deep-q-network/src/DQN.cpp" "/mnt/c/Users/Owner/source/repos/deep-q-network/build/src/CMakeFiles/mylibrary.dir/DQN.cpp.o"
+  "/mnt/c/Users/Owner/source/repos/deep-q-network/src/ReplayMemory.cpp" "/mnt/c/Users/Owner/source/repos/deep-q-network/build/src/CMakeFiles/mylibrary.dir/ReplayMemory.cpp.o"
+  "/mnt/c/Users/Owner/source/repos/deep-q-network/src/TicTacToeAgent.cpp" "/mnt/c/Users/Owner/source/repos/deep-q-network/build/src/CMakeFiles/mylibrary.dir/TicTacToeAgent.cpp.o"
+  "/mnt/c/Users/Owner/source/repos/deep-q-network/src/TicTacToeEnvironment.cpp" "/mnt/c/Users/Owner/source/repos/deep-q-network/build/src/CMakeFiles/mylibrary.dir/TicTacToeEnvironment.cpp.o"
+  "/mnt/c/Users/Owner/source/repos/deep-q-network/src/main.cpp" "/mnt/c/Users/Owner/source/repos/deep-q-network/build/src/CMakeFiles/mylibrary.dir/main.cpp.o"
+  )
+set(CMAKE_CXX_COMPILER_ID "GNU")
+
+# Preprocessor definitions for this target.
+set(CMAKE_TARGET_DEFINITIONS_CXX
+  "USE_C10D_GLOO"
+  "USE_DISTRIBUTED"
+  "USE_RPC"
+  "USE_TENSORPIPE"
   )
 
-# The set of dependency files which are needed:
-set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/chandler/src/deep-q-network/src/DQN.cpp" "src/CMakeFiles/mylibrary.dir/DQN.cpp.o" "gcc" "src/CMakeFiles/mylibrary.dir/DQN.cpp.o.d"
-  "/home/chandler/src/deep-q-network/src/Environment.cpp" "src/CMakeFiles/mylibrary.dir/Environment.cpp.o" "gcc" "src/CMakeFiles/mylibrary.dir/Environment.cpp.o.d"
-  "/home/chandler/src/deep-q-network/src/ReplayMemory.cpp" "src/CMakeFiles/mylibrary.dir/ReplayMemory.cpp.o" "gcc" "src/CMakeFiles/mylibrary.dir/ReplayMemory.cpp.o.d"
-  "/home/chandler/src/deep-q-network/src/TicTacToeEnvironment.cpp" "src/CMakeFiles/mylibrary.dir/TicTacToeEnvironment.cpp.o" "gcc" "src/CMakeFiles/mylibrary.dir/TicTacToeEnvironment.cpp.o.d"
-  "/home/chandler/src/deep-q-network/src/main.cpp" "src/CMakeFiles/mylibrary.dir/main.cpp.o" "gcc" "src/CMakeFiles/mylibrary.dir/main.cpp.o.d"
+# The include file search paths:
+set(CMAKE_CXX_TARGET_INCLUDE_PATH
+  "../../includes"
+  "../src/../include"
+  "../src"
+  "/usr/local/lib/libtorch/include"
+  "/usr/local/lib/libtorch/include/torch/csrc/api/include"
   )
 
 # Targets to which this target links.

@@ -4,19 +4,21 @@
 #include "Environment.h"
 #include <array>
 #include <iostream>
+#include <numeric>
+#include <random>
 
-
-class TicTacToeEnvironment : public Environment {
+class TicTacToeEnvironment : public Environment
+{
 public:
     TicTacToeEnvironment();
     virtual ~TicTacToeEnvironment();
-    virtual std::tuple<std::vector<double>, float, bool> step(int action) override;
-    virtual std::vector<double> reset() override;
+    virtual std::tuple<torch::Tensor, torch::Tensor, bool> step(int action) override;
+    virtual torch::Tensor reset() override;
     virtual void render() override;
     virtual void close() override;
-
-private:
-    std::vector<double> board; // TicTacToe board
+    bool checkWin(double value);
+    bool checkDraw();
+    int opponentSelectAction();
 };
 
 #endif // TICTACTOE_ENVIRONMENT_H

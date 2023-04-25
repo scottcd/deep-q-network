@@ -7,16 +7,15 @@
 #include <random>
 #include <algorithm>
 #include <torch/torch.h>
-
-using namespace std;
+#include "Transition.h"
 
 
 class ReplayMemory {
 public:
     ReplayMemory(int capacity);
     int getCapacity() const;
-    void push(int value);
-    std::vector<int> sample(int batchSize);
+    void push(Transition value);
+    std::vector<Transition> sample(int batchSize);
     int size() const;
 
     friend std::ostream& operator<<(std::ostream& os, const ReplayMemory& replayMemory) {
@@ -25,7 +24,7 @@ public:
     }
 
 private:
-    std::deque<int> memory;
+    std::deque<Transition> memory;
     int capacity;
 };
 
