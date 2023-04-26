@@ -27,7 +27,7 @@ std::tuple<torch::Tensor, torch::Tensor, bool> TicTacToeEnvironment::step(int ac
     {
         float reward = -1.0f;
         return std::make_tuple(torch::from_blob(observationSpace.data(), {static_cast<long int>(observationSpace.size())}, torch::kDouble),
-                               torch::from_blob(&reward, {1}, torch::kFloat32).clone(), false);
+                               torch::from_blob(&reward, {1}, torch::kDouble).clone(), false);
     }
     // check if we won
     bool won = checkWin(1);
@@ -36,13 +36,13 @@ std::tuple<torch::Tensor, torch::Tensor, bool> TicTacToeEnvironment::step(int ac
     {
         float reward = 100.0f;
         return std::make_tuple(torch::from_blob(observationSpace.data(), {static_cast<long int>(observationSpace.size())}, torch::kDouble),
-                               torch::from_blob(&reward, {1}, torch::kFloat32).clone(), true);
+                               torch::from_blob(&reward, {1}, torch::kDouble).clone(), true);
     }
     if (draw == 1)
     {
         float reward = 0.0f;
         return std::make_tuple(torch::from_blob(observationSpace.data(), {static_cast<long int>(observationSpace.size())}, torch::kDouble),
-                               torch::from_blob(&reward, {1}, torch::kFloat32).clone(), true);
+                               torch::from_blob(&reward, {1}, torch::kDouble).clone(), true);
     }
     // opponent play move
     int i = opponentSelectAction();
@@ -54,20 +54,20 @@ std::tuple<torch::Tensor, torch::Tensor, bool> TicTacToeEnvironment::step(int ac
     {
         float reward = -100.0f;
         return std::make_tuple(torch::from_blob(observationSpace.data(), {static_cast<long int>(observationSpace.size())}, torch::kDouble),
-                               torch::from_blob(&reward, {1}, torch::kFloat32).clone(), true);
+                               torch::from_blob(&reward, {1}, torch::kDouble).clone(), true);
     }
     if (draw == 1)
     {
         float reward = 0.0f;
         return std::make_tuple(torch::from_blob(observationSpace.data(), {static_cast<long int>(observationSpace.size())}, torch::kDouble),
-                               torch::from_blob(&reward, {1}, torch::kFloat32).clone(), true);
+                               torch::from_blob(&reward, {1}, torch::kDouble).clone(), true);
     }
 
     // could optimize here by adding the appropriate reward for blocking a move, getting two in a row, etc.
 
     float reward = 1.0f;
     return std::make_tuple(torch::from_blob(observationSpace.data(), {static_cast<long int>(observationSpace.size())}, torch::kDouble),
-                           torch::from_blob(&reward, {1}, torch::kFloat32).clone(), false);
+                           torch::from_blob(&reward, {1}, torch::kDouble).clone(), false);
 }
 
 int TicTacToeEnvironment::opponentSelectAction()
@@ -130,6 +130,7 @@ bool TicTacToeEnvironment::checkWin(double value)
 
 void TicTacToeEnvironment::render()
 {
+    system("clear");
     // Define a lambda function that maps double values to char values
     auto to_char = [](double val)
     {
@@ -144,11 +145,7 @@ void TicTacToeEnvironment::render()
         }
     };
 
-    std::cout << "Available actions: ";
-    for (int i : actionSpace)
-    {
-        std::cout << i << " ";
-    }
+
     std::cout << "\n";
 
     std::cout << " " << to_char(observationSpace[0]) << " | " << to_char(observationSpace[1]) << " | " << to_char(observationSpace[2]) << " \n";
@@ -157,6 +154,8 @@ void TicTacToeEnvironment::render()
     std::cout << "---+---+---\n";
     std::cout << " " << to_char(observationSpace[6]) << " | " << to_char(observationSpace[7]) << " | " << to_char(observationSpace[8]) << " \n";
     std::cout << "\n";
+    std::this_thread::sleep_for(std::chrono::milliseconds(250));
+
 }
 
 void TicTacToeEnvironment::close()

@@ -1,6 +1,0 @@
-/mnt/c/Users/Owner/source/repos/deep-q-network/build/CMakeFiles/rebuild_cache.dir
-/mnt/c/Users/Owner/source/repos/deep-q-network/build/CMakeFiles/edit_cache.dir
-/mnt/c/Users/Owner/source/repos/deep-q-network/build/CMakeFiles/app.dir
-/mnt/c/Users/Owner/source/repos/deep-q-network/build/src/CMakeFiles/rebuild_cache.dir
-/mnt/c/Users/Owner/source/repos/deep-q-network/build/src/CMakeFiles/edit_cache.dir
-/mnt/c/Users/Owner/source/repos/deep-q-network/build/src/CMakeFiles/mylibrary.dir

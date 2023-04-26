@@ -1,2 +1,0 @@
-/bin/ar qc libmylibrary.a  CMakeFiles/mylibrary.dir/DQN.cpp.o CMakeFiles/mylibrary.dir/ReplayMemory.cpp.o CMakeFiles/mylibrary.dir/TicTacToeAgent.cpp.o CMakeFiles/mylibrary.dir/TicTacToeEnvironment.cpp.o CMakeFiles/mylibrary.dir/main.cpp.o
-/bin/ranlib libmylibrary.a

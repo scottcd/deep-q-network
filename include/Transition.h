@@ -17,7 +17,6 @@ public:
     {}
     ~Transition() {}
 
-private:
     torch::Tensor state;
     torch::Tensor nextState;
     torch::Tensor action;

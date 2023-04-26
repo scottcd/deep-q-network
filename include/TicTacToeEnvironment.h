@@ -5,7 +5,10 @@
 #include <array>
 #include <iostream>
 #include <numeric>
+#include <stdlib.h>
 #include <random>
+#include <thread> 
+#include <chrono> 
 
 class TicTacToeEnvironment : public Environment
 {
