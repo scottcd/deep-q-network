@@ -13,32 +13,71 @@
 #include "Transition.h"
 #include "TransposedTransition.h"
 
+/**
+ * Generic Deep Q Learning Agent
+ *
+ * Override Agent with a scenario-specific Agent.
+ */
 class Agent
 {
+    // TODO: add argument to save/load in constructor/deconstructor
+
 public:
     /**
-     * Brief description of the method.
+     * Generic Deep Q Agent Constructor
      *
      * Detailed description of the method.
      * This can span multiple lines.
      *
      * @param observationSpace Description of the parameter.
-     * @return Description of the return value.
+     * @param actionSpace Description of the parameter.
+     * @param memorySize Description of the parameter.
+     * @param epsilonStart Description of the parameter.
+     * @param epsilonEnd Description of the parameter.
+     * @param epsilonDecay Description of the parameter.
+     * @param batchSize Description of the parameter.
      */
-    Agent(int observationSpace, int actionSpace, int memorySize=10000, float epsilonStart = 0.9,
+    Agent(int observationSpace, int actionSpace, int memorySize = 10000, float epsilonStart = 0.9,
           float epsilonEnd = 0.05, float epsilonDecay = 1000, int batchSize = 128);
     /**
-     * Select a space to play
+     * Select an action
      *
-     * The agent selects a space to place their
-     * O.
+     * Agent selects an action using an Annealing Epsilon Greedy
+     * Function. Using a threshold, we either act randomly or optimally.
+     * At the beginning, the agent is more likely to randomly
+     * choose an action from the action space. As time progresses, we lower our
+     * threshold, and the agent is more likely to choose the action
+     * with the maximum expected return.
      *
-     * @return an integer (0-8) corresponding to the
-     * space to play.
+     * @param state Description of the parameter.
+     * @return return
      */
     torch::Tensor selectAction(torch::Tensor state);
+
+    /**
+     * Given some state, act on the environment.
+     *
+     * @param state current state
+     */
     bool act(torch::Tensor &state);
+
+    /**
+     * Learn from the environment.
+     *
+     * If our memory is large enough, optimize our policy
+     * using Adam's optimizer.
+     */
     void learn();
+
+    /**
+     * Train on the environment.
+     *
+     * Run through the environment until termination
+     * for the specified number of episodes.
+     *
+     *
+     * @param numEpisodes number of episodes to train
+     */
     void train(int numEpisodes);
 
 protected:

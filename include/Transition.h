@@ -9,6 +9,12 @@
 #include <torch/torch.h>
 
 
+/**
+ * Transition
+ * 
+ * Data structure to keep track of the transitions of states. This 
+ * structure holds the current state, action taken, next state, and reward.
+*/
 class Transition {
 public:
     Transition() {}

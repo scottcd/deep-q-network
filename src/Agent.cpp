@@ -1,5 +1,4 @@
 #include "Agent.h"
-#include <torch/torch.h> // include the PyTorch header file
 
 Agent::Agent(int observationSpace, int actionSpace, int memorySize, float epsilonStart,
              float epsilonEnd, float epsilonDecay, int batchSize)
@@ -47,7 +46,6 @@ torch::Tensor Agent::selectAction(torch::Tensor state)
 
 bool Agent::act(torch::Tensor &state)
 {
-    // select an action and step in the environment
     torch::Tensor action = selectAction(state);
     auto [observation, reward, terminated] = env->step(action.item<int>());
 

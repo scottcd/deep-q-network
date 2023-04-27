@@ -1,7 +1,4 @@
-#include <iostream>
 #include "TicTacToeAgent.h"
-
-
 
 int main() {
   TicTacToeAgent a = TicTacToeAgent();

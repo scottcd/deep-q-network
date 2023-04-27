@@ -7,9 +7,20 @@
 #include <tuple>
 #include <torch/torch.h>
 
+/*
+* Generic Environment to represent the 
+* environment that the Agent perceives.
+*/
 class Environment
 {
 public:
+    /**
+     * Environment Constructor
+     *
+     * Generic Environment to be
+     * overriden by a scenario-specific
+     * environment.
+     */
     Environment(int numObservations, int numActions) : observationSpace(numObservations), actionSpace(numActions)
     {
     }
