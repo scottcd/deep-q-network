@@ -8,11 +8,27 @@
 #include <algorithm>
 #include <torch/torch.h>
 #include "Transition.h"
-
+/**
+ * Transposed Transition
+ * 
+ * Transpose Transition's cols and rows to 
+ * rows and cols respectively
+*/
 class TransposedTransition
 {
 public:
+    /**
+     * Transposd Transition Default Constructor 
+    */
     TransposedTransition() {}
+
+    /**
+    * Transposed Transition Constructor
+    * 
+    * Transposes a given vector of Transitions
+    * to vectors of states, rewards, next states,
+    * and actions
+    */
     TransposedTransition(std::vector<Transition> transitions)
         : states(), nextStates(), actions(), rewards()
 
@@ -41,11 +57,18 @@ public:
             rewards.push_back(torch::stack(tensorBatch[3]));
         }
     }
+    /**
+     * Deconstructor for Transposed Transition
+    */
     ~TransposedTransition() {}
 
+    // vector of states
     std::vector<torch::Tensor> states;
+    // vector of next states
     std::vector<torch::Tensor> nextStates;
+    // vector of actions
     std::vector<torch::Tensor> actions;
+    // vector of rewards
     std::vector<torch::Tensor> rewards;
 };
 

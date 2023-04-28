@@ -30,7 +30,6 @@ public:
      */
     TicTacToeAgent() : Agent(9, 9)
     {
-        // TODO: add argument to save/load in constructor/deconstructor
         env = new TicTacToeEnvironment();
     }
     /**
