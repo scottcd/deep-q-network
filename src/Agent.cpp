@@ -13,7 +13,9 @@ Agent::Agent(int observationSpace, int actionSpace, int memorySize, float epsilo
       tau(tau),
       batchSize(batchSize),
       learningRate(learningRate),
-      actionsTaken(0)
+      actionsTaken(0),
+      policyFilePath("results/policy.pt"),
+      targetFilePath("results/target.pt")
 {
 }
 
@@ -148,13 +150,13 @@ void Agent::train(int numEpisodes)
     torch::optim::AdamW optimizer = torch::optim::AdamW(policyNetwork->parameters(),
                                                         torch::optim::AdamWOptions(learningRate).amsgrad(true));
 
-    if (std::filesystem::exists("results/tic-tac-toe-policy.pt"))
+    if (std::filesystem::exists(policyFilePath))
     {
-        torch::load(policyNetwork, "results/tic-tac-toe-policy.pt");
+        torch::load(policyNetwork, policyFilePath);
     }
-    if (std::filesystem::exists("results/tic-tac-toe-target.pt"))
+    if (std::filesystem::exists(targetFilePath))
     {
-        torch::load(targetNetwork, "results/tic-tac-toe-target.pt");
+        torch::load(targetNetwork, targetFilePath);
     }
 
     // train for n episodes
@@ -191,6 +193,6 @@ void Agent::train(int numEpisodes)
                 break;
         }
     }
-    torch::save(targetNetwork, "results/tic-tac-toe-target.pt");
-    torch::save(policyNetwork, "results/tic-tac-toe-policy.pt");
+    torch::save(policyNetwork, policyFilePath);
+    torch::save(targetNetwork, targetFilePath);
 }

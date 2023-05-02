@@ -17,12 +17,12 @@
 /**
  * Generic Deep Q Learning Agent
  *
- * Override Agent with a scenario-specific Agent.
+ * Override Agent with a scenario-specific Agent. 
+ * Derived classes must set an environment and 
+ * filepaths for policy and target
  */
 class Agent
 {
-    // TODO: add argument to save/load in constructor/deconstructor
-
 public:
     /**
      * Generic Deep Q Agent Constructor
@@ -94,6 +94,10 @@ protected:
     ReplayMemory memory;
     // Environment the agent observes and acts on
     Environment *env;
+    // filepath for policy network
+    std::string policyFilePath;
+    // filepath for target network
+    std::string targetFilePath;
     // Number of actions taken
     int actionsTaken;
     // Number of transitions required before learning

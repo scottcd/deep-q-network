@@ -131,7 +131,8 @@ bool TicTacToeEnvironment::checkWin(double value)
 void TicTacToeEnvironment::render()
 {
     system("clear");
-    // Define a lambda function that maps double values to char values
+
+    // convert int values to X's and O's
     auto to_char = [](double val)
     {
         switch ((int)val)
@@ -145,7 +146,6 @@ void TicTacToeEnvironment::render()
         }
     };
 
-
     std::cout << "\n";
 
     std::cout << " " << to_char(observationSpace[0]) << " | " << to_char(observationSpace[1]) << " | " << to_char(observationSpace[2]) << " \n";
@@ -154,9 +154,9 @@ void TicTacToeEnvironment::render()
     std::cout << "---+---+---\n";
     std::cout << " " << to_char(observationSpace[6]) << " | " << to_char(observationSpace[7]) << " | " << to_char(observationSpace[8]) << " \n";
     std::cout << "\n";
-    //std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    // std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
-    // wins, losses, draws, avg repeat moves, avg moves to end 
+    // wins, losses, draws, avg repeat moves, avg moves to end
 }
 
 void TicTacToeEnvironment::close()

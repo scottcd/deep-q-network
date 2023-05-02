@@ -27,10 +27,14 @@ public:
      * acts in the environment, and learns the
      * expected cumulative reward of each action
      * for a given state.
+     * 
+     * note: make sure to sent environment and filepaths!
      */
     TicTacToeAgent() : Agent(9, 9)
     {
         env = new TicTacToeEnvironment();
+        policyFilePath="results/tic-tac-toe-policy.pt";
+        targetFilePath="results/tic-tac-toe-target.pt";
     }
     /**
      * Tic-Tac-Toe Agent Deconstructor

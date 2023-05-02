@@ -38,7 +38,19 @@ public:
      * @return x
      */
     torch::Tensor &forward(torch::Tensor &x);
+
+    /**
+     * get named parameters
+     * 
+     * @return a dictionary of names, values for each named parameter
+    */
     std::unordered_map<std::string, torch::Tensor> stateDictionary() const;
+
+    /**
+     * update named parameters with a state dictionary
+     * 
+     * @param stateDictionary state dictionary to update our named_parameters with
+    */
     void loadStateDictionary(const std::unordered_map<std::string, torch::Tensor> &stateDictionary);
 
 private:
