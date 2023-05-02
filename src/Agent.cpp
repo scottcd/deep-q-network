@@ -20,44 +20,51 @@ Agent::Agent(int observationSpace, int actionSpace, int memorySize, float epsilo
 {
 }
 
-void Agent::saveStatistics(const std::vector<std::string> &args)
+void Agent::saveStatistics(const std::map<std::string, std::string> &data)
+{
+    if (statsFilePath.empty())
     {
-        if (statsFilePath.empty())
-        {
-            std::cout << "No write file specified. Statistics will not be written to a file." << std::endl;
-            return;
-        }
-        std::ifstream file(statsFilePath);
-        if (!file)
-        {
-            // create file
-            std::ofstream newFile(statsFilePath);
-            if (!newFile)
-            {
-                std::cerr << "Error creating file: " << statsFilePath << std::endl;
-                return;
-            }
-        }
-
-        // append file
-        std::ofstream appendFile(statsFilePath, std::ios::app);
-        if (!appendFile)
-        {
-            std::cerr << "Error opening file for appending: " << statsFilePath << std::endl;
-            return;
-        }
-        bool isFirstArg = true;
-        for (const std::string &arg : args)
-        {
-            if (!isFirstArg)
-                appendFile << ",";
-            isFirstArg = false;
-
-            appendFile << arg;
-        }
-
-        appendFile << std::endl;
+        std::cout << "No write file specified. Statistics will not be written to a file." << std::endl;
+        return;
     }
+    std::ifstream file(statsFilePath);
+    if (!file)
+    {
+        // create file
+        std::ofstream newFile(statsFilePath);
+        if (!newFile)
+        {
+            std::cerr << "Error creating file: " << statsFilePath << std::endl;
+            return;
+        }
+        bool isFirstKey = true;
+        for (const auto &entry : data)
+        {
+            if (!isFirstKey)
+                newFile << ",";
+            isFirstKey = false;
+            newFile << entry.first;
+        }
+        newFile << std::endl;
+    }
+
+    // append file
+    std::ofstream appendFile(statsFilePath, std::ios::app);
+    if (!appendFile)
+    {
+        std::cerr << "Error opening file for appending: " << statsFilePath << std::endl;
+        return;
+    }
+    bool isFirstValue = true;
+    for (const auto &entry : data)
+    {
+        if (!isFirstValue)
+            appendFile << ",";
+        isFirstValue = false;
+        appendFile << entry.second; 
+    }
+    appendFile << std::endl;
+}
 
 void Agent::loadModel()
 {
@@ -268,12 +275,12 @@ void Agent::train()
                     }
                 };
                 // outcome, # legal moves, # illegal moves,
-                if(statsParameters.size() != 0)
+                if (statsParameters.size() != 0)
                 {
                     updateStatsParameters();
                     saveStatistics(statsParameters);
                 }
-                
+
                 break;
             }
         }

@@ -46,7 +46,9 @@ public:
         {
             this->numEpisodes = numEpisodes;
         }
+
         statsFilePath = "out/tic-tac-toe-results.csv";
+        updateStatsParameters();
     }
 
     /**
@@ -60,22 +62,30 @@ public:
         delete env;
     }
 
-
-    void updateStatsParameters() override 
+    /**
+     * Set stats parameters to parameters
+     * we want to record (output to csv).
+    */
+    void updateStatsParameters() override
     {
-        statsParameters = {{to_string(dynamic_cast<TicTacToeEnvironment *>(env)->outcome),
-                            to_string(dynamic_cast<TicTacToeEnvironment *>(env)->legalMoves),
-                            to_string(dynamic_cast<TicTacToeEnvironment *>(env)->illegalMoves),
-                            to_string(dynamic_cast<TicTacToeEnvironment *>(env)->illegalMoveReward),
-                            to_string(dynamic_cast<TicTacToeEnvironment *>(env)->legalNonEndingMoveReward),
-                            to_string(dynamic_cast<TicTacToeEnvironment *>(env)->winReward),
-                            to_string(dynamic_cast<TicTacToeEnvironment *>(env)->lossReward),
-                            to_string(dynamic_cast<TicTacToeEnvironment *>(env)->drawReward),
-                            to_string(epsilonStart), to_string(epsilonEnd), to_string(epsilonDecay),
-                            to_string(batchSize), to_string(gamma), to_string(tau),
-                            to_string(learningRate), to_string(cleanStart), to_string(numEpisodes)}};
+        statsParameters["Outcome"] = to_string(dynamic_cast<TicTacToeEnvironment *>(env)->outcome);
+        statsParameters["LegalMoves"] = to_string(dynamic_cast<TicTacToeEnvironment *>(env)->legalMoves);
+        statsParameters["IllegalMoves"] = to_string(dynamic_cast<TicTacToeEnvironment *>(env)->illegalMoves);
+        statsParameters["IllegalMoveReward"] = to_string(dynamic_cast<TicTacToeEnvironment *>(env)->illegalMoveReward);
+        statsParameters["LegalNonEndingMoveReward"] = to_string(dynamic_cast<TicTacToeEnvironment *>(env)->legalNonEndingMoveReward);
+        statsParameters["WinReward"] = to_string(dynamic_cast<TicTacToeEnvironment *>(env)->winReward);
+        statsParameters["LossReward"] = to_string(dynamic_cast<TicTacToeEnvironment *>(env)->lossReward);
+        statsParameters["DrawReward"] = to_string(dynamic_cast<TicTacToeEnvironment *>(env)->drawReward);
+        statsParameters["EpsilonStart"] = to_string(epsilonStart);
+        statsParameters["EpsilonEnd"] = to_string(epsilonEnd);
+        statsParameters["EpsilonDecay"] = to_string(epsilonDecay);
+        statsParameters["BatchSize"] = to_string(batchSize);
+        statsParameters["Gamma"] = to_string(gamma);
+        statsParameters["Tau"] = to_string(tau);
+        statsParameters["LearningRate"] = to_string(learningRate);
+        statsParameters["CleanStart"] = to_string(cleanStart);
+        statsParameters["NumEpisodes"] = to_string(numEpisodes);
     }
-
 
     /**
      * Setters for command line arguments

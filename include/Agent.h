@@ -5,6 +5,7 @@
 #include <ostream>
 #include <vector>
 #include <cmath>
+#include <map>
 #include <filesystem>
 #include <tuple>
 #include <torch/torch.h>
@@ -50,7 +51,7 @@ public:
      *
      * data must be converted to string to be passed into function
      */
-    void saveStatistics(const std::vector<std::string> &args);
+    void saveStatistics(const std::map<std::string, std::string>& data);
 
     /**
      * Load model into target and policy NN
@@ -159,7 +160,7 @@ protected:
     /**
      * Parameters to print out for statistics
      */
-    std::vector<std::string> statsParameters;
+    std::map<std::string, std::string> statsParameters;
 };
 
 #endif // AGENT_H
