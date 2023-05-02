@@ -65,7 +65,7 @@ public:
     /**
      * Set stats parameters to parameters
      * we want to record (output to csv).
-    */
+     */
     void updateStatsParameters() override
     {
         statsParameters["Outcome"] = to_string(dynamic_cast<TicTacToeEnvironment *>(env)->outcome);
@@ -94,9 +94,10 @@ public:
     {
         numEpisodes = value;
     }
-    /**
-     * Setters for command line arguments
-     */
+    void setStatsFilePath(std::string value)
+    {
+        statsFilePath = value;
+    }
     void setCleanStart(bool value)
     {
         cleanStart = value;

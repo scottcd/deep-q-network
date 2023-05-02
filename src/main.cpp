@@ -17,7 +17,8 @@ void displayHelp()
             << "  --batchSize: Number of transitions required before learning (optional, default = 128)\n"
             << "  --gamma: Weight for future states in Q value calculation (optional, default = 0.99)\n"
             << "  --tau: Weight for target network's soft update; that is, how much we update target from policy (optional, default = 0.005)\n"
-            << "  --learningRate: Optimizer's learning rate (optional, default = 1e-4)\n";
+            << "  --learningRate: Optimizer's learning rate (optional, default = 1e-4)\n"
+            << "  --statsFilePath: File path for statistics output (optional, default = out/tic-tac-toe-results.csv)\n";
 }
 
 int main(int argc, char *argv[])
@@ -31,7 +32,7 @@ int main(int argc, char *argv[])
     std::string arg = std::string(argv[i]);
 
     if (arg == "-h" || arg == "--help")
-    { 
+    {
       displayHelp();
       return 0;
     }
@@ -90,6 +91,10 @@ int main(int argc, char *argv[])
     else if (arg == "--learningRate" && i + 1 < argc)
     {
       a.setLearningRate(std::stof(argv[++i]));
+    }
+    else if (arg == "--statsFilePath" && i + 1 < argc)
+    {
+      a.setStatsFilePath(argv[++i]);
     }
     else
     {
