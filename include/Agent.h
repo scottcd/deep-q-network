@@ -17,8 +17,8 @@
 /**
  * Generic Deep Q Learning Agent
  *
- * Override Agent with a scenario-specific Agent. 
- * Derived classes must set an environment and 
+ * Override Agent with a scenario-specific Agent.
+ * Derived classes must set an environment and
  * filepaths for policy and target
  */
 class Agent
@@ -44,6 +44,26 @@ public:
     Agent(int observationSpace, int actionSpace, int memorySize = 10000, float epsilonStart = 0.9,
           float epsilonEnd = 0.05, float epsilonDecay = 1000, float gamma = 0.99, float tau = 0.005,
           int batchSize = 128, double learningRate = 1e-4);
+
+    /**
+     * Save data to file if write file has been specified.
+     *
+     * data must be converted to string to be passed into function
+     */
+    void saveStatistics(const std::vector<std::string> &args);
+
+    /**
+     * Load model into target and policy NN
+     * from file
+     */
+    void loadModel();
+
+    /**
+     * Save target and policy NN
+     * to file
+     */
+    void saveModel();
+
     /**
      * Select an action
      *
@@ -83,7 +103,15 @@ public:
      *
      * @param numEpisodes number of episodes to train
      */
-    void train(int numEpisodes);
+    void train();
+
+    /**
+     * Set statsParameter's std::vector<std::string>
+     * values to print out.
+     * 
+     * set statsParameters
+     */
+    virtual void updateStatsParameters() = 0;
 
 protected:
     //  Deep Q Policy Network
@@ -98,6 +126,8 @@ protected:
     std::string policyFilePath;
     // filepath for target network
     std::string targetFilePath;
+    // filepath for target network
+    std::string statsFilePath;
     // Number of actions taken
     int actionsTaken;
     // Number of transitions required before learning
@@ -114,6 +144,22 @@ protected:
     float tau;
     // Optimizer's learning rate
     double learningRate;
+    /**
+     *  whether to load model from a start file or
+     *  begin model as new.
+     *
+     * True: start new
+     * False: load model from file
+     */
+    bool cleanStart;
+    /**
+     * Number of episodes to run
+     */
+    int numEpisodes;
+    /**
+     * Parameters to print out for statistics
+     */
+    std::vector<std::string> statsParameters;
 };
 
 #endif // AGENT_H

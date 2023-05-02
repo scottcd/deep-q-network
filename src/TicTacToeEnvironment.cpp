@@ -1,6 +1,22 @@
 #include "TicTacToeEnvironment.h"
 
-TicTacToeEnvironment::TicTacToeEnvironment() : Environment(9, 9)
+TicTacToeEnvironment::TicTacToeEnvironment(float illegalMoveReward, float legalNonEndingMoveReward,
+                                           float winReward, float drawReward,
+                                           float lossReward)
+    : Environment(9, 9),
+      wins(0),
+      losses(0),
+      draws(0),
+      outcome(0),
+      legalMoves(0),
+      illegalMoves(0),
+      totalInvalidMoves(0),
+      totalMoves(0),
+      illegalMoveReward(illegalMoveReward),
+      legalNonEndingMoveReward(legalNonEndingMoveReward),
+      winReward(winReward),
+      drawReward(drawReward),
+      lossReward(lossReward)
 {
 }
 
@@ -10,6 +26,10 @@ TicTacToeEnvironment::~TicTacToeEnvironment()
 
 torch::Tensor TicTacToeEnvironment::reset()
 {
+    outcome = 0;
+    illegalMoves = 0;
+    legalMoves = 0;
+
     std::cout << "Resetting board.\n";
     std::iota(actionSpace.begin(), actionSpace.end(), 0);
     fill(observationSpace.begin(), observationSpace.end(), 0);
@@ -21,28 +41,38 @@ std::tuple<torch::Tensor, torch::Tensor, bool> TicTacToeEnvironment::step(int ac
 {
     // play move if space is empty.
     if (observationSpace[action] == 0)
+    {
+        // env-specific statistics
+        legalMoves++;
+        totalMoves++;
+
         observationSpace[action] = 1;
-    // else, move is invalid. Reward: -1
+    }
     else
     {
-        float reward = -1.0f;
+        // env-specific statistics
+        illegalMoves++;
+        totalInvalidMoves++;
+
         return std::make_tuple(torch::from_blob(observationSpace.data(), {static_cast<long int>(observationSpace.size())}, torch::kFloat32),
-                               torch::from_blob(&reward, {1}, torch::kFloat32).clone(), false);
+                               torch::from_blob(&illegalMoveReward, {1}, torch::kFloat32).clone(), false);
     }
     // check if we won
     bool won = checkWin(1);
     bool draw = checkDraw();
     if (won == 1)
     {
-        float reward = 100.0f;
+        wins++;
+        outcome = 1;
         return std::make_tuple(torch::from_blob(observationSpace.data(), {static_cast<long int>(observationSpace.size())}, torch::kFloat32),
-                               torch::from_blob(&reward, {1}, torch::kFloat32).clone(), true);
+                               torch::from_blob(&winReward, {1}, torch::kFloat32).clone(), true);
     }
     if (draw == 1)
     {
-        float reward = 0.0f;
+        draws++;
+        outcome = 0;
         return std::make_tuple(torch::from_blob(observationSpace.data(), {static_cast<long int>(observationSpace.size())}, torch::kFloat32),
-                               torch::from_blob(&reward, {1}, torch::kFloat32).clone(), true);
+                               torch::from_blob(&drawReward, {1}, torch::kFloat32).clone(), true);
     }
     // opponent play move
     int i = opponentSelectAction();
@@ -52,22 +82,23 @@ std::tuple<torch::Tensor, torch::Tensor, bool> TicTacToeEnvironment::step(int ac
     bool lost = checkWin(-1);
     if (lost == 1)
     {
-        float reward = -100.0f;
+        losses++;
+        outcome = -1;
         return std::make_tuple(torch::from_blob(observationSpace.data(), {static_cast<long int>(observationSpace.size())}, torch::kFloat32),
-                               torch::from_blob(&reward, {1}, torch::kFloat32).clone(), true);
+                               torch::from_blob(&lossReward, {1}, torch::kFloat32).clone(), true);
     }
     if (draw == 1)
     {
-        float reward = 0.0f;
+        draws++;
+        outcome = 0;
         return std::make_tuple(torch::from_blob(observationSpace.data(), {static_cast<long int>(observationSpace.size())}, torch::kFloat32),
-                               torch::from_blob(&reward, {1}, torch::kFloat32).clone(), true);
+                               torch::from_blob(&drawReward, {1}, torch::kFloat32).clone(), true);
     }
 
     // could optimize here by adding the appropriate reward for blocking a move, getting two in a row, etc.
 
-    float reward = 1.0f;
     return std::make_tuple(torch::from_blob(observationSpace.data(), {static_cast<long int>(observationSpace.size())}, torch::kFloat32),
-                           torch::from_blob(&reward, {1}, torch::kFloat32).clone(), false);
+                           torch::from_blob(&legalNonEndingMoveReward, {1}, torch::kFloat32).clone(), false);
 }
 
 int TicTacToeEnvironment::opponentSelectAction()
@@ -132,6 +163,9 @@ void TicTacToeEnvironment::render()
 {
     system("clear");
 
+    std::cout << "Playing as O\n"
+              << "\n";
+
     // convert int values to X's and O's
     auto to_char = [](double val)
     {
@@ -154,9 +188,22 @@ void TicTacToeEnvironment::render()
     std::cout << "---+---+---\n";
     std::cout << " " << to_char(observationSpace[6]) << " | " << to_char(observationSpace[7]) << " | " << to_char(observationSpace[8]) << " \n";
     std::cout << "\n";
-    // std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
-    // wins, losses, draws, avg repeat moves, avg moves to end
+    float averageInvalidMoves = totalInvalidMoves / (wins + losses + draws + 1);
+    float averageMovesPerGame = totalMoves / (wins + losses + draws + 1);
+
+    std::cout << "Legal this Game:\t\t" << legalMoves << "\n";
+    std::cout << "Illegal Moves this Game:\t" << illegalMoves << "\n\n";
+
+    std::cout << "Total Wins:\t\t\t" << wins << "\n";
+    std::cout << "Total Losses:\t\t\t" << losses << "\n";
+    std::cout << "Total Draws:\t\t\t" << draws << "\n";
+    std::cout << "Average Invalid Moves:\t\t" << averageInvalidMoves << "\n";
+    std::cout << "Average Moves per Game:\t\t" << averageMovesPerGame << "\n";
+
+    std::cout << "\n";
+
+    // std::this_thread::sleep_for(std::chrono::milliseconds(300));
 }
 
 void TicTacToeEnvironment::close()

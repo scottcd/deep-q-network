@@ -14,9 +14,77 @@ Agent::Agent(int observationSpace, int actionSpace, int memorySize, float epsilo
       batchSize(batchSize),
       learningRate(learningRate),
       actionsTaken(0),
-      policyFilePath("results/policy.pt"),
-      targetFilePath("results/target.pt")
+      cleanStart(false),
+      numEpisodes(10)
+
 {
+}
+
+void Agent::saveStatistics(const std::vector<std::string> &args)
+    {
+        if (statsFilePath.empty())
+        {
+            std::cout << "No write file specified. Statistics will not be written to a file." << std::endl;
+            return;
+        }
+        std::ifstream file(statsFilePath);
+        if (!file)
+        {
+            // create file
+            std::ofstream newFile(statsFilePath);
+            if (!newFile)
+            {
+                std::cerr << "Error creating file: " << statsFilePath << std::endl;
+                return;
+            }
+        }
+
+        // append file
+        std::ofstream appendFile(statsFilePath, std::ios::app);
+        if (!appendFile)
+        {
+            std::cerr << "Error opening file for appending: " << statsFilePath << std::endl;
+            return;
+        }
+        bool isFirstArg = true;
+        for (const std::string &arg : args)
+        {
+            if (!isFirstArg)
+                appendFile << ",";
+            isFirstArg = false;
+
+            appendFile << arg;
+        }
+
+        appendFile << std::endl;
+    }
+
+void Agent::loadModel()
+{
+    if (policyFilePath.empty() or targetFilePath.empty())
+    {
+        std::cout << "No model file specified. Will not load model." << std::endl;
+        return;
+    }
+    if (std::filesystem::exists(policyFilePath))
+    {
+        torch::load(policyNetwork, policyFilePath);
+    }
+    if (std::filesystem::exists(targetFilePath))
+    {
+        torch::load(targetNetwork, targetFilePath);
+    }
+}
+
+void Agent::saveModel()
+{
+    if (policyFilePath.empty() or targetFilePath.empty())
+    {
+        std::cout << "No model file specified. Will not save model." << std::endl;
+        return;
+    }
+    torch::save(policyNetwork, policyFilePath);
+    torch::save(targetNetwork, targetFilePath);
 }
 
 torch::Tensor Agent::selectAction(torch::Tensor state)
@@ -144,19 +212,14 @@ void Agent::learn(torch::optim::AdamW &optimizer)
     optimizer.step();
 }
 
-void Agent::train(int numEpisodes)
+void Agent::train()
 {
     // create optimizer for learn()
     torch::optim::AdamW optimizer = torch::optim::AdamW(policyNetwork->parameters(),
                                                         torch::optim::AdamWOptions(learningRate).amsgrad(true));
-
-    if (std::filesystem::exists(policyFilePath))
+    if (cleanStart == false)
     {
-        torch::load(policyNetwork, policyFilePath);
-    }
-    if (std::filesystem::exists(targetFilePath))
-    {
-        torch::load(targetNetwork, targetFilePath);
+        loadModel();
     }
 
     // train for n episodes
@@ -189,10 +252,31 @@ void Agent::train(int numEpisodes)
             env->render();
 
             if (terminated)
+            {
                 // episode finished
+                // convert outcomes value to win/loss/draw
+                auto to_string = [](int val) -> std::string
+                {
+                    switch (static_cast<int>(val))
+                    {
+                    case 1:
+                        return "Win";
+                    case -1:
+                        return "Loss";
+                    default:
+                        return "Draw";
+                    }
+                };
+                // outcome, # legal moves, # illegal moves,
+                if(statsParameters.size() != 0)
+                {
+                    updateStatsParameters();
+                    saveStatistics(statsParameters);
+                }
+                
                 break;
+            }
         }
     }
-    torch::save(policyNetwork, policyFilePath);
-    torch::save(targetNetwork, targetFilePath);
+    saveModel();
 }

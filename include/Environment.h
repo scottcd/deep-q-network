@@ -3,14 +3,16 @@
 
 #include <string>
 #include <ostream>
+#include <fstream>
+#include <iostream>
 #include <vector>
 #include <tuple>
 #include <torch/torch.h>
 
 /*
-* Generic Environment to represent the 
-* environment that the Agent perceives.
-*/
+ * Generic Environment to represent the
+ * environment that the Agent perceives.
+ */
 class Environment
 {
 public:
@@ -20,42 +22,46 @@ public:
      * Generic Environment to be
      * overriden by a scenario-specific
      * environment.
+     *
+     * INCLUDE statsFilePath to print statistics!
      */
-    Environment(int numObservations, int numActions) : observationSpace(numObservations), actionSpace(numActions)
+    Environment(int numObservations, int numActions)
+        : observationSpace(numObservations), actionSpace(numActions)
     {
     }
     /**
      * Step through the environment with some action
-     * 
+     *
      * @param action action to take
      * @return tuple for state, reward, and terminated
-    */
+     */
     virtual std::tuple<torch::Tensor, torch::Tensor, bool> step(int action) = 0;
-    
+
     /**
      * Reset the environment to its initial state
-    */
+     */
     virtual torch::Tensor reset() = 0;
-    
+
     /**
      * Display the environment
-    */
+     */
     virtual void render() = 0;
-    
+
     /**
      * Do any cleanup to close the environment
-    */
+     */
     virtual void close() = 0;
 
     /**
      * Get the number of possible actions
-    */
+     */
     int getNumActions() { return actionSpace.size(); }
 
     /**
      * Get the number of observations
-    */
+     */
     int getNumObservations() { return observationSpace.size(); }
+
 
 protected:
     // structure for each possible action
