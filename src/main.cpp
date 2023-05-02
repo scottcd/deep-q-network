@@ -2,5 +2,5 @@
 
 int main() {
   TicTacToeAgent a = TicTacToeAgent();
-  a.train(3);
+  a.train(500);
 }

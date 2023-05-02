@@ -52,6 +52,11 @@ public:
     */
     int getNumActions() { return actionSpace.size(); }
 
+    /**
+     * Get the number of observations
+    */
+    int getNumObservations() { return observationSpace.size(); }
+
 protected:
     // structure for each possible action
     std::vector<int> actionSpace;

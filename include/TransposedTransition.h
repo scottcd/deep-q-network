@@ -10,57 +10,42 @@
 #include "Transition.h"
 /**
  * Transposed Transition
- * 
- * Transpose Transition's cols and rows to 
+ *
+ * Transpose Transition's cols and rows to
  * rows and cols respectively
-*/
+ */
 class TransposedTransition
 {
 public:
     /**
-     * Transposd Transition Default Constructor 
-    */
+     * Transposed Transition Default Constructor
+     */
     TransposedTransition() {}
 
     /**
-    * Transposed Transition Constructor
-    * 
-    * Transposes a given vector of Transitions
-    * to vectors of states, rewards, next states,
-    * and actions
-    */
+     * Transposed Transition Constructor
+     *
+     * Transposes a given vector of Transitions
+     * to vectors of states, rewards, next states,
+     * and actions
+     *
+     * e.g.,
+     * ([a, 1], [b, 2], [c, 3]) ->
+     * ([a, b, c], [1, 2, 3])
+     */
     TransposedTransition(std::vector<Transition> transitions)
         : states(), nextStates(), actions(), rewards()
 
     {
         // Transpose the batch of Transitions
-        std::vector<std::vector<torch::Tensor>> transposedTensors;
-        for (int i = 0; i < 4; i++)
+        for (const auto &transition : transitions)
         {
-            std::vector<torch::Tensor> tensorBatch;
-            for (const auto &transition : transitions)
-            {
-                tensorBatch.push_back(torch::transpose(transition.state, 0, 1));
-                tensorBatch.push_back(torch::transpose(transition.nextState, 0, 1));
-                tensorBatch.push_back(torch::transpose(transition.action, 0, 1));
-                tensorBatch.push_back(torch::transpose(transition.reward, 0, 1));
-            }
-            transposedTensors.push_back(tensorBatch);
-        }
-
-        // Stack the transposed tensors and store them in the corresponding member variables
-        for (const auto &tensorBatch : transposedTensors)
-        {
-            states.push_back(torch::stack(tensorBatch[0]));
-            nextStates.push_back(torch::stack(tensorBatch[1]));
-            actions.push_back(torch::stack(tensorBatch[2]));
-            rewards.push_back(torch::stack(tensorBatch[3]));
+            states.push_back(transition.state);
+            nextStates.push_back(transition.nextState);
+            actions.push_back(transition.action);
+            rewards.push_back(transition.reward);
         }
     }
-    /**
-     * Deconstructor for Transposed Transition
-    */
-    ~TransposedTransition() {}
 
     // vector of states
     std::vector<torch::Tensor> states;

@@ -36,11 +36,14 @@ public:
     Transition(torch::Tensor state, torch::Tensor nextState, torch::Tensor action, torch::Tensor reward) 
     : state(state), nextState(nextState), action(action), reward(reward)
     {}
-    ~Transition() {}
 
+    // current state
     torch::Tensor state;
+    // next state
     torch::Tensor nextState;
+    // action taken
     torch::Tensor action;
+    // reward given
     torch::Tensor reward;
 };
 

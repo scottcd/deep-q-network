@@ -5,6 +5,7 @@
 #include <ostream>
 #include <vector>
 #include <cmath>
+#include <filesystem>
 #include <tuple>
 #include <torch/torch.h>
 #include "DQN.h"
@@ -29,16 +30,20 @@ public:
      * Detailed description of the method.
      * This can span multiple lines.
      *
-     * @param observationSpace Description of the parameter.
-     * @param actionSpace Description of the parameter.
-     * @param memorySize Description of the parameter.
-     * @param epsilonStart Description of the parameter.
-     * @param epsilonEnd Description of the parameter.
-     * @param epsilonDecay Description of the parameter.
-     * @param batchSize Description of the parameter.
+     * @param observationSpace Number of input observations
+     * @param actionSpace Number of possible actions
+     * @param memorySize Number of transitions to hold in Replay Memory
+     * @param epsilonStart Value to start epsilon threshold
+     * @param epsilonEnd Value to end epsilon threshold
+     * @param epsilonDecay Rate at which we lower epsilon threshold
+     * @param gamma Weight for future states in Q value calculation
+     * @param tau Weight for target network's soft update; that is, how much we update target from policy
+     * @param batchSize Number of transitions required before learning
+     * @param learningRate Optimizer's learning rate
      */
     Agent(int observationSpace, int actionSpace, int memorySize = 10000, float epsilonStart = 0.9,
-          float epsilonEnd = 0.05, float epsilonDecay = 1000, int batchSize = 128);
+          float epsilonEnd = 0.05, float epsilonDecay = 1000, float gamma = 0.99, float tau = 0.005,
+          int batchSize = 128, double learningRate = 1e-4);
     /**
      * Select an action
      *
@@ -67,7 +72,7 @@ public:
      * If our memory is large enough, optimize our policy
      * using Adam's optimizer.
      */
-    void learn();
+    void learn(torch::optim::AdamW &optimizer);
 
     /**
      * Train on the environment.
@@ -81,15 +86,30 @@ public:
     void train(int numEpisodes);
 
 protected:
+    //  Deep Q Policy Network
     DQN policyNetwork;
+    // Deep Q Target Network
     DQN targetNetwork;
+    // Memory to keep track of state change and action/reward
     ReplayMemory memory;
+    // Environment the agent observes and acts on
     Environment *env;
+    // Number of actions taken
     int actionsTaken;
+    // Number of transitions required before learning
     int batchSize;
+    // Value epsilon threshold starts on
     float epsilonStart;
+    // Value epsilon threshold ends on
     float epsilonEnd;
+    // Rate at which we lower epsilon threshold
     float epsilonDecay;
+    // Weight for future states in Q value calculation
+    float gamma;
+    // Weight for target network's soft update
+    float tau;
+    // Optimizer's learning rate
+    double learningRate;
 };
 
 #endif // AGENT_H

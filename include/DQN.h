@@ -12,12 +12,13 @@ using namespace std;
 using namespace torch;
 
 /**
-* Deep Q Neural Network
-* 
-* Derived from PyTorch's neural
-* network module.
-*/
-class DQN  : public torch::nn::Module{
+ * Deep Q Neural Network
+ *
+ * Derived from PyTorch's neural
+ * network module.
+ */
+class DQNImpl : public torch::nn::Module
+{
 public:
     /**
      * Deep Q Neural Network Constructor
@@ -28,12 +29,17 @@ public:
      * @param numObservations Number of observations (NN input)
      * @param numActions Number of possible actions (NN output)
      */
-    DQN(int numObservations, int numActions);
+    DQNImpl(int numObservations, int numActions);
 
     /**
      * Forward propagate through the neural network
+     *
+     * @param x
+     * @return x
      */
-    torch::Tensor& forward(torch::Tensor& x);
+    torch::Tensor &forward(torch::Tensor &x);
+    std::unordered_map<std::string, torch::Tensor> stateDictionary() const;
+    void loadStateDictionary(const std::unordered_map<std::string, torch::Tensor> &stateDictionary);
 
 private:
     // Neural Network input layer
@@ -47,5 +53,6 @@ private:
     // number of possible actions
     int numActions;
 };
+TORCH_MODULE(DQN); // creates module holder for NetImpl
 
 #endif // DQN_H
