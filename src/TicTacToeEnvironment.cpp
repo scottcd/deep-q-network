@@ -103,16 +103,35 @@ std::tuple<torch::Tensor, torch::Tensor, bool> TicTacToeEnvironment::step(int ac
 
 int TicTacToeEnvironment::opponentSelectAction()
 {
-    // Generate a random index in the vector that has the value 0.0
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dis(0, observationSpace.size() - 1);
-    int index = dis(gen);
-    while (observationSpace[index] != 0.0)
-    {
-        index = dis(gen);
+    if (observationSpace[4] == 0) {
+        return 4;
     }
-    return index;
+    // Play a corner if available
+    if (observationSpace[0] == 0) {
+        return 0;
+    }
+    if (observationSpace[2] == 0) {
+        return 2;
+    }
+    if (observationSpace[6] == 0) {
+        return 6;
+    }
+    if (observationSpace[8] == 0) {
+        return 8;
+    }
+    // Play an edge if available
+    if (observationSpace[1] == 0) {
+        return 1;
+    }
+    if (observationSpace[3] == 0) {
+        return 3;
+    }
+    if (observationSpace[5] == 0) {
+        return 5;
+    }
+    if (observationSpace[7] == 0) {
+        return 7;
+    }
 }
 
 bool TicTacToeEnvironment::checkDraw()
