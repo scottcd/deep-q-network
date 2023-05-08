@@ -133,6 +133,7 @@ protected:
     int actionsTaken;
     // Number of transitions required before learning
     int batchSize;
+    int memorySize;
     // Value epsilon threshold starts on
     float epsilonStart;
     // Value epsilon threshold ends on

@@ -150,6 +150,18 @@ public:
     {
         learningRate = value;
     }
+    void setTargetFilePath(std::string value)
+    {
+        targetFilePath = value;
+    }
+    void setPolicyFilePath(std::string value)
+    {
+        policyFilePath = value;
+    }
+    void setMemorySize(int value)
+    {
+        memorySize = value;
+    }
 };
 
 #endif // TICTACTOE_AGENT_H

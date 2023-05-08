@@ -18,7 +18,10 @@ void displayHelp()
             << "  --gamma: Weight for future states in Q value calculation (optional, default = 0.99)\n"
             << "  --tau: Weight for target network's soft update; that is, how much we update target from policy (optional, default = 0.005)\n"
             << "  --learningRate: Optimizer's learning rate (optional, default = 1e-4)\n"
-            << "  --statsFilePath: File path for statistics output (optional, default = out/tic-tac-toe-results.csv)\n";
+            << "  --statsFilePath: File path for statistics output (optional, default = out/tic-tac-toe-results.csv)\n"
+            << "  --targetFilePath: File path for target network (optional, default = out/tic-tac-toe-target.csv)\n"
+            << "  --policyFilePath: File path for policy network (optional, default = out/tic-tac-toe-policy.csv)\n"
+            << "  --memorySize: Capacity of replay memory (optional, default = 10000)\n";
 }
 
 int main(int argc, char *argv[])
@@ -95,6 +98,18 @@ int main(int argc, char *argv[])
     else if (arg == "--statsFilePath" && i + 1 < argc)
     {
       a.setStatsFilePath(argv[++i]);
+    }
+    else if (arg == "--targetFilePath" && i + 1 < argc)
+    {
+      a.setTargetFilePath(argv[++i]);
+    }
+    else if (arg == "--policyFilePath" && i + 1 < argc)
+    {
+      a.setPolicyFilePath(argv[++i]);
+    }
+    else if (arg == "--memorySize" && i + 1 < argc)
+    {
+      a.setMemorySize(std::stoi(argv[++i]));
     }
     else
     {

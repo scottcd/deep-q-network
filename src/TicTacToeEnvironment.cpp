@@ -132,6 +132,7 @@ int TicTacToeEnvironment::opponentSelectAction()
     if (observationSpace[7] == 0) {
         return 7;
     }
+    return -1;
 }
 
 bool TicTacToeEnvironment::checkDraw()
