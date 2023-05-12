@@ -1,2 +1,0 @@
-/bin/ar qc libmylibrary.a  CMakeFiles/mylibrary.dir/main.cpp.o CMakeFiles/mylibrary.dir/Person.cpp.o
-/bin/ranlib libmylibrary.a
