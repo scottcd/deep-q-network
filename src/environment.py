@@ -6,7 +6,7 @@ class Environment:
     def reset(self):
         pass
 
-    def step(self):
+    def step(self, action):
         pass
 
     def close(self):
