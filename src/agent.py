@@ -42,6 +42,8 @@ class Agent():
         self.steps_taken = 0
         self.optimizer = optim.AdamW(
             self.policy_network.parameters(), lr=self.learning_rate, amsgrad=True)
+        self.explores = 0
+        self.exploits = 0
 
     def load_model(self):
         if self.policy_input is not None:
@@ -62,40 +64,41 @@ class Agent():
             torch.save(self.target_network.state_dict(), self.target_output)
 
     def save_statistics(self):
-        # if file doesn't exist create it and append headers
-        headers = f'''NumberEpisodes,MemorySize,BatchSize,
-        EpsilonStart,EpsilonEnd,EpsilonDecay,Tau,
-        Gamma,LearningRate,WinReward,LossReward,DrawReward,legalMoveReward,IllegalMoveReward,
-        Outcome,NumberIllegalMoves
-        '''
+        headers = (
+            'NumberEpisodes,MemorySize,BatchSize,'
+            'EpsilonStart,EpsilonEnd,EpsilonDecay,Tau,'
+            'Gamma,LearningRate,WinReward,LossReward,DrawReward,legalMoveReward,IllegalMoveReward,'
+            'Outcome,NumberIllegalMoves,Explore/Exploit'
+        )
 
-        # append episode data
-        out = f'''{self.number_episodes},{self.memory.size()},{self.batch_size},
-        {self.epsilon_start},{self.epsilon_end},{self.epsilon_decay},{self.tau},
-        {self.gamma},{self.learning_rate},{self.env.win_reward},{self.env.loss_reward},
-        {self.env.legal_move_reward},{self.env.illegal_move_reward},{self.env.outcome},
-        {self.env.illegal_moves}\n
-        '''
-
+        out = (
+            f'{self.number_episodes},{self.memory.capacity},{self.batch_size},'
+            f'{self.epsilon_start},{self.epsilon_end},{self.epsilon_decay},{self.tau},'
+            f'{self.gamma},{self.learning_rate},{self.env.win_reward},{self.env.loss_reward},'
+            f'{self.env.legal_move_reward},{self.env.illegal_move_reward},{self.env.outcome},'
+            f'{self.env.illegal_moves}{self.explores/self.exploits if self.exploits != 0 else 1}\n'
+        )
 
         if os.path.isfile(self.statistics_output):
-            # file exists, append 'a'
+            # file exists, append
             with open(self.statistics_output, 'a') as f:
                 f.write(out)
         else:
-            # file does not exist, create and append 'a'
+            # file does not exist, create and append
             with open(self.statistics_output, 'w') as f:
                 f.write(f'{headers}\n{out}')
-                
-   def select_action(self):
+
+    def select_action(self):
         sample = random.random()
         eps_threshold = self.epsilon_end + (self.epsilon_start - self.epsilon_end) * \
             math.exp(-1. * self.steps_taken / self.epsilon_decay)
         self.steps_taken += 1
         if sample > eps_threshold:
             with torch.no_grad():
+                self.exploits += 1
                 return self.policy_network(self.env.state).max(1)[1].view(1, 1)
         else:
+            self.explores += 1
             return torch.tensor([[random.randint(0, self.env.action_space-1)]], dtype=torch.long)
 
     def act(self):
@@ -185,7 +188,8 @@ class Agent():
 
                 # if episode has ended
                 if self.env.terminated:
-                    self.save_statistics()
+                    if self.statistics_output is not None:
+                        self.save_statistics()
                     break
 
         if self.policy_output is not None:

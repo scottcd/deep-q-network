@@ -5,6 +5,7 @@ import random
 
 class ReplayMemory:
     def __init__(self, capacity):
+        self.capacity=capacity
         self.memory = deque([], maxlen=capacity)
 
     def push(self, *args):
