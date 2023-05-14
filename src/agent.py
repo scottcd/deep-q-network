@@ -1,6 +1,7 @@
 import math
 import random
 import io
+import os
 
 import torch
 import torch.nn as nn
@@ -61,9 +62,32 @@ class Agent():
             torch.save(self.target_network.state_dict(), self.target_output)
 
     def save_statistics(self):
-        pass
+        # if file doesn't exist create it and append headers
+        headers = f'''NumberEpisodes,MemorySize,BatchSize,
+        EpsilonStart,EpsilonEnd,EpsilonDecay,Tau,
+        Gamma,LearningRate,WinReward,LossReward,DrawReward,legalMoveReward,IllegalMoveReward,
+        Outcome,NumberIllegalMoves
+        '''
 
-    def select_action(self):
+        # append episode data
+        out = f'''{self.number_episodes},{self.memory.size()},{self.batch_size},
+        {self.epsilon_start},{self.epsilon_end},{self.epsilon_decay},{self.tau},
+        {self.gamma},{self.learning_rate},{self.env.win_reward},{self.env.loss_reward},
+        {self.env.legal_move_reward},{self.env.illegal_move_reward},{self.env.outcome},
+        {self.env.illegal_moves}\n
+        '''
+
+
+        if os.path.isfile(self.statistics_output):
+            # file exists, append 'a'
+            with open(self.statistics_output, 'a') as f:
+                f.write(out)
+        else:
+            # file does not exist, create and append 'a'
+            with open(self.statistics_output, 'w') as f:
+                f.write(f'{headers}\n{out}')
+                
+   def select_action(self):
         sample = random.random()
         eps_threshold = self.epsilon_end + (self.epsilon_start - self.epsilon_end) * \
             math.exp(-1. * self.steps_taken / self.epsilon_decay)
@@ -150,7 +174,6 @@ class Agent():
 
                 self.env.render()
 
-
                 # observe and remember state change
                 self.observe_state_change(action, reward)
 
@@ -159,7 +182,6 @@ class Agent():
 
                 # soft update target network
                 self.update_target_network()
-
 
                 # if episode has ended
                 if self.env.terminated:

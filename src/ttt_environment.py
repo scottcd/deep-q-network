@@ -14,6 +14,9 @@ class TicTacToeEnvironment(Environment):
         self.win_reward = win_reward
         self.loss_reward = loss_reward
         self.draw_reward = draw_reward
+        self.illegal_moves = 0
+        self.legal_moves = 0
+        self.outcome = 0
 
     def reset(self):
         self.terminated = False
@@ -79,14 +82,17 @@ class TicTacToeEnvironment(Environment):
     def step(self, action):
         # invalid move
         if self.state[0, action] != 0:
+            self.illegal_moves += 1
             self.update_next_state(self.state)
             return torch.Tensor([self.illegal_move_reward])
 
         # play move
         self.state[0, action] = 1
+        self.legal_moves += 1
 
         # check finish
         if self.check_end(1):
+            self.outcome = 1
             self.terminated = True
             self.update_next_state(self.state)
             return torch.Tensor([self.win_reward])
@@ -104,6 +110,7 @@ class TicTacToeEnvironment(Environment):
             self.update_next_state(self.state)
             return torch.Tensor([self.draw_reward])
         if self.check_end(-1):
+            self.outcome = -1
             self.terminated = True
             self.update_next_state(self.state)
             return torch.Tensor([self.loss_reward])
