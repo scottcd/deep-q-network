@@ -41,6 +41,11 @@ def add_args():
                         help='Reward for losing the game.')
     parser.add_argument('-dr', '--draw_reward',  type=float, dest='draw_reward',
                         help='Reward for a draw.')
+    parser.add_argument('-nl', '--number_h_layers',  type=int, dest='number_hidden_layers',
+                        help='Number of hidden layers in the neural network.')
+    parser.add_argument('-nn', '--number_neurons',  type=int, dest='number_neurons',
+                    help='Number of neurons in the hidden layers of the neural network.')
+
 
 if __name__ == '__main__':
     # parse args
@@ -89,5 +94,11 @@ if __name__ == '__main__':
         agent.env.loss_reward = parsed_args.loss_reward
     if parsed_args.draw_reward is not None:
         agent.env.draw_reward = parsed_args.draw_reward
+    if parsed_args.number_hidden_layers is not None:
+        agent.n_hidden_layers = parsed_args.number_hidden_layers
+    if parsed_args.number_neurons is not None:
+        agent.n_neurons = parsed_args.number_neurons
+
+    agent.configure()
 
     agent.train()

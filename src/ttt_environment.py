@@ -1,4 +1,5 @@
 import torch
+from device_manager import DeviceManager
 from environment import Environment
 
 
@@ -18,8 +19,13 @@ class TicTacToeEnvironment(Environment):
         self.legal_moves = 0
         self.outcome = 0
 
+        device_manager = DeviceManager.get_instance()
+        self.device = device_manager.get_device()
+
     def reset(self):
         self.terminated = False
+        self.illegal_moves = 0
+        self.legal_moves = 0
         self.state = torch.zeros((1, self.observation_space))
 
     def update_next_state(self, observation):
@@ -84,7 +90,7 @@ class TicTacToeEnvironment(Environment):
         if self.state[0, action] != 0:
             self.illegal_moves += 1
             self.update_next_state(self.state)
-            return torch.Tensor([self.illegal_move_reward])
+            return torch.Tensor([self.illegal_move_reward], device=self.device)
 
         # play move
         self.state[0, action] = 1
@@ -95,11 +101,11 @@ class TicTacToeEnvironment(Environment):
             self.outcome = 1
             self.terminated = True
             self.update_next_state(self.state)
-            return torch.Tensor([self.win_reward])
+            return torch.Tensor([self.win_reward], device=self.device)
         if self.check_draw():
             self.terminated = True
             self.update_next_state(self.state)
-            return torch.Tensor([self.draw_reward])
+            return torch.Tensor([self.draw_reward], device=self.device)
 
         # opponent play
         self.opponent_move()
@@ -108,15 +114,15 @@ class TicTacToeEnvironment(Environment):
         if self.check_draw():
             self.terminated = True
             self.update_next_state(self.state)
-            return torch.Tensor([self.draw_reward])
+            return torch.Tensor([self.draw_reward], device=self.device)
         if self.check_end(-1):
             self.outcome = -1
             self.terminated = True
             self.update_next_state(self.state)
-            return torch.Tensor([self.loss_reward])
+            return torch.Tensor([self.loss_reward], device=self.device)
 
         self.update_next_state(self.state)
-        return torch.Tensor([self.legal_move_reward])
+        return torch.Tensor([self.legal_move_reward], device=self.device)
 
     def render(self):
         # Create a dictionary to map the values to symbols
